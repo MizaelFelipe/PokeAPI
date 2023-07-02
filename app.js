@@ -34,6 +34,13 @@ const getPokemonsIds = pokeApiResults => pokeApiResults.map(({ url }) => {
   return urlAsArray.at(urlAsArray.length - 2)
 })
 
+const getPokemonsImgs = async ids => {
+    const promises = ids.map(id => fetch(`./assets/img/${id}.png`))
+    const responses = await Promise.allSettled(promises)
+    const fulfilled = responses.filter(response => response.status === 'fulfilled')
+    return fulfilled.map(response=> response.value.url)
+
+}
 
 const handlePageLoaded = async () => {
   try {
@@ -47,9 +54,12 @@ const handlePageLoaded = async () => {
 
     const types = await getPokemonsType(pokeApiResults)
     const ids = getPokemonsIds(pokeApiResults)
+    const imgs = await getPokemonsImgs(ids)
+
+    
 
 
-      console.log(ids);
+      console.log(imgs);
 
   } catch (error) {
     alert("Algo deu errado")
